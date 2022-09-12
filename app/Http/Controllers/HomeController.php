@@ -31,13 +31,19 @@ class HomeController extends Controller
         ]);
         $data = json_decode($res->getBody(),true);
         $post = [];
-        foreach($data as $val){
-            foreach($comment_count as $val2){
-                if($val['id'] == $val2['postId']){
-                    $post[$val['id']] = $val;
-                    $post[$val['id']]['total_number_of_comments'] = $val2['counter'];
-                };
-            }
+        // foreach($data as $val){
+        //     foreach($comment_count as $val2){
+        //         if($val['id'] == $val2['postId']){
+        //             $post[$val['id']] = $val;
+        //             $post[$val['id']]['total_number_of_comments'] = $val2['counter'];
+        //         };
+        //     }
+        // }
+
+        //Solution to reduce looping
+        foreach($comment_count as $val){
+                $post[$val['postId']] = $data[array_search($val['postId'], array_column($data, 'id'))];
+                $post[$val['postId']]['total_number_of_comments'] = $val['counter'];
         }
         $post = collect($post)->sortBy('total_number_of_comments')->reverse()->toArray();
         return $post;
