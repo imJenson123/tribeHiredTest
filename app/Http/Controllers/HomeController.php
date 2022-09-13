@@ -69,19 +69,24 @@ class HomeController extends Controller
         }
         if(isset($request->name)){
             $data = array_filter($data, function($comment) use($request){
-                return $comment['name'] == $request->name;
+                // return $comment['name'] == $request->name;
+                return ( strpos($comment['name'], $request->name) !== false );
             });
         }
         if(isset($request->email)){
             $data = array_filter($data, function($comment) use($request){
-                return $comment['email'] == $request->email;
+                return ( strpos($comment['email'], $request->email) !== false );
             });
         }
         if(isset($request->body)){
-            $data = array_filter($data, function($comment) use($request){
-                return $comment['body'] == $request->body;
+            // dd(array_keys(preg_grep('~' . $request->body . '~', array_column($data, 'body'))));
+            $data = array_filter($data, function($comment) use ($request) {
+                return ( strpos($comment['body'], $request->body) !== false );
             });
-        }
+            // $data = array_filter($data, function($comment) use($request){
+            //     return preg_grep('~' . $request->body . '~', array_column($comment, 'body'));
+            // });
+        }dd($data);
         return $data;
     }
 }
